@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ZhwCommentMapper">
+
+    <resultMap id="CommentResult" type="ZhwComment">
+        <id     property="commentId"       column="comment_id"/>
+        <result property="storyId"         column="story_id"/>
+        <result property="branchId"        column="branch_id"/>
+        <result property="parentId"        column="parent_id"/>
+        <result property="replyToUserId"   column="reply_to_user_id"/>
+        <result property="content"         column="content"/>
+        <result property="userId"          column="user_id"/>
+        <result property="likeCount"       column="like_count"/>
+        <result property="delFlag"         column="del_flag"/>
+        <result property="createBy"        column="create_by"/>
+        <result property="createTime"      column="create_time"/>
+        <result property="updateBy"        column="update_by"/>
+        <result property="updateTime"      column="update_time"/>
+        <result property="authorNickName"  column="author_nick_name"/>
+        <result property="authorAvatar"    column="author_avatar"/>
+        <result property="replyToNickName" column="reply_to_nick_name"/>
+        <result property="liked"           column="liked"/>
+    </resultMap>
+
+    <sql id="selectCommentVo">
+        SELECT c.comment_id, c.story_id, c.branch_id, c.parent_id, c.reply_to_user_id,
+               c.content, c.user_id, c.like_count, c.del_flag,
+               c.create_by, c.create_time, c.update_by, c.update_time,
+               u.nick_name  AS author_nick_name,
+               u.avatar     AS author_avatar,
+               ru.nick_name AS reply_to_nick_name
+        FROM zhw_comment c
+        LEFT JOIN zhw_user u  ON u.user_id  = c.user_id
+        LEFT JOIN zhw_user ru ON ru.user_id = c.reply_to_user_id
+        WHERE c.del_flag = '0'
+    </sql>
+
+    <select id="selectRootComments" resultMap="CommentResult">
+        SELECT q.*,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.comment_id AND l.target_type = 2), 0) AS liked
+        FROM (
+            <include refid="selectCommentVo"/>
+            AND c.story_id  = #{storyId}
+            AND c.branch_id = #{branchId}
+            AND c.parent_id = 0
+        ) q
+        ORDER BY q.create_time DESC
+    </select>
+
+    <select id="selectReplies" resultMap="CommentResult">
+        SELECT q.*,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.comment_id AND l.target_type = 2), 0) AS liked
+        FROM (
+            <include refid="selectCommentVo"/>
+            AND c.parent_id = #{parentId}
+        ) q
+        ORDER BY q.create_time ASC
+    </select>
+
+    <select id="selectCommentById" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        AND c.comment_id = #{commentId}
+    </select>
+
+    <insert id="insertComment" parameterType="ZhwComment" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO zhw_comment (story_id, branch_id, parent_id, reply_to_user_id, content,
+            user_id, like_count, del_flag, create_by, create_time)
+        VALUES (#{storyId}, #{branchId}, #{parentId}, #{replyToUserId}, #{content},
+            #{userId}, 0, '0', #{createBy}, NOW())
+    </insert>
+
+    <update id="deleteComment">
+        UPDATE zhw_comment SET del_flag = '2' WHERE comment_id = #{commentId} AND user_id = #{userId}
+    </update>
+
+    <update id="updateLikeCount">
+        UPDATE zhw_comment SET like_count = like_count + #{delta} WHERE comment_id = #{commentId}
+    </update>
+
+    <select id="countComments" resultType="int">
+        SELECT COUNT(1) FROM zhw_comment
+        WHERE story_id = #{storyId} AND branch_id = #{branchId} AND del_flag = '0'
+    </select>
+
+    <select id="selectAdminCommentList" resultMap="CommentResult">
+        SELECT c.comment_id, c.story_id, c.branch_id, c.parent_id, c.reply_to_user_id,
+               c.content, c.user_id, c.like_count, c.del_flag,
+               c.create_by, c.create_time, c.update_by, c.update_time,
+               u.nick_name  AS author_nick_name,
+               u.avatar     AS author_avatar,
+               ru.nick_name AS reply_to_nick_name
+        FROM zhw_comment c
+        LEFT JOIN zhw_user u  ON u.user_id  = c.user_id
+        LEFT JOIN zhw_user ru ON ru.user_id = c.reply_to_user_id
+        WHERE c.del_flag = '0'
+        <if test="keyword != null and keyword != ''">
+            AND c.content LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="storyId != null and storyId > 0">
+            AND c.story_id = #{storyId}
+        </if>
+        ORDER BY c.create_time DESC
+    </select>
+
+    <update id="deleteCommentAdmin">
+        UPDATE zhw_comment SET del_flag = '2' WHERE comment_id = #{commentId}
+    </update>
+
+</mapper>

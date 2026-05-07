@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ZhwUserMapper">
+
+    <resultMap id="ZhwUserResult" type="ZhwUser">
+        <id     property="userId"     column="user_id"/>
+        <result property="userName"   column="user_name"/>
+        <result property="nickName"   column="nick_name"/>
+        <result property="avatar"     column="avatar"/>
+        <result property="remark"     column="remark"/>
+        <result property="phone"      column="phone"/>
+        <result property="gender"     column="gender"/>
+        <result property="birthday"   column="birthday"/>
+        <result property="loginTime"  column="login_time"/>
+        <result property="loginIp"    column="login_ip"/>
+        <result property="password"   column="password"/>
+        <result property="status"     column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="score"      column="score"/>
+        <result property="storyCount" column="story_count"/>
+        <result property="branchCount" column="branch_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="likeCount"  column="like_count"/>
+    </resultMap>
+
+    <select id="selectByUserName" resultMap="ZhwUserResult">
+        SELECT * FROM zhw_user WHERE user_name = #{userName}
+    </select>
+
+    <select id="selectById" resultMap="ZhwUserResult">
+        SELECT u.*,
+            COALESCE((SELECT SUM(score) FROM zhw_user_score WHERE user_id = u.user_id), 0) AS score,
+            (SELECT COUNT(1) FROM zhw_story WHERE user_id = u.user_id AND del_flag = '0') AS story_count,
+            (SELECT COUNT(1) FROM zhw_branch WHERE user_id = u.user_id AND del_flag = '0') AS branch_count,
+            (SELECT COUNT(1) FROM zhw_comment WHERE user_id = u.user_id AND del_flag = '0') AS comment_count,
+            COALESCE((SELECT SUM(b.like_count) FROM zhw_branch b WHERE b.user_id = u.user_id AND b.del_flag = '0'), 0) AS like_count
+        FROM zhw_user u WHERE u.user_id = #{userId}
+    </select>
+
+    <insert id="insert" parameterType="ZhwUser" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO zhw_user (user_name, nick_name, avatar, remark, phone, gender, password, status, create_time)
+        VALUES (#{userName}, #{nickName}, #{avatar}, #{remark}, #{phone}, #{gender}, #{password}, '0', NOW())
+    </insert>
+
+    <update id="update" parameterType="ZhwUser">
+        UPDATE zhw_user
+        <set>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            update_time = NOW()
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="selectList" resultMap="ZhwUserResult">
+        SELECT u.*,
+            COALESCE((SELECT SUM(score) FROM zhw_user_score WHERE user_id = u.user_id), 0) AS score,
+            (SELECT COUNT(1) FROM zhw_story WHERE user_id = u.user_id AND del_flag = '0') AS story_count,
+            (SELECT COUNT(1) FROM zhw_branch WHERE user_id = u.user_id AND del_flag = '0') AS branch_count,
+            (SELECT COUNT(1) FROM zhw_comment WHERE user_id = u.user_id AND del_flag = '0') AS comment_count,
+            COALESCE((SELECT SUM(b.like_count) FROM zhw_branch b WHERE b.user_id = u.user_id AND b.del_flag = '0'), 0) AS like_count
+        FROM zhw_user u
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (u.user_name LIKE CONCAT('%', #{keyword}, '%') OR u.nick_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null and status != ''">
+                AND u.status = #{status}
+            </if>
+            <if test="beginTime != null">
+                AND u.create_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                AND u.create_time &lt;= #{endTime}
+            </if>
+        </where>
+        <choose>
+            <when test="orderBy == 'score'">ORDER BY score DESC</when>
+            <when test="orderBy == 'storyCount'">ORDER BY story_count DESC</when>
+            <when test="orderBy == 'branchCount'">ORDER BY branch_count DESC</when>
+            <when test="orderBy == 'createTimeAsc'">ORDER BY u.create_time ASC</when>
+            <otherwise>ORDER BY u.user_id DESC</otherwise>
+        </choose>
+    </select>
+
+    <update id="updateStatus">
+        UPDATE zhw_user SET status = #{status}, update_time = NOW() WHERE user_id = #{userId}
+    </update>
+
+    <update id="resetPwd">
+        UPDATE zhw_user SET password = #{password}, update_time = NOW() WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateLoginInfo">
+        UPDATE zhw_user SET login_time = NOW(), login_ip = #{loginIp} WHERE user_id = #{userId}
+    </update>
+
+</mapper>

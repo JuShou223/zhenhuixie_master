@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Playwright MCP（浏览器数据 + 日志）
+.playwright-mcp/
+
+# Claude Code 本地设置
+.claude/
+
+# IDE 临时文件
+idea/
+
+# 日志
+*.log
+
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+target/
+
+# 环境变量
+.env
+.env.local
+
+# Generated（实验性项目，暂不纳入版本管理）
+generated/

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ZhwUserScoreMapper">
+
+    <resultMap id="ScoreResult" type="ZhwUserScore">
+        <id     property="scoreId"    column="score_id"/>
+        <result property="userId"     column="user_id"/>
+        <result property="storyId"    column="story_id"/>
+        <result property="score"      column="score"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="nickName"   column="nick_name"/>
+        <result property="avatar"     column="avatar"/>
+        <result property="rank"       column="rnk"/>
+    </resultMap>
+
+    <!-- MySQL 8.0+ 窗口函数实现排名 -->
+    <select id="selectRankingByStory" resultMap="ScoreResult">
+        SELECT score_id, user_id, story_id, score, create_time, update_time,
+               nick_name, avatar,
+               ROW_NUMBER() OVER (ORDER BY score DESC) AS rnk
+        FROM (
+            SELECT us.score_id, us.user_id, us.story_id, us.score, us.create_time, us.update_time,
+                   u.nick_name, u.avatar
+            FROM zhw_user_score us
+            LEFT JOIN zhw_user u ON u.user_id = us.user_id
+            WHERE us.story_id = #{storyId}
+        ) t
+        ORDER BY score DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 积分增减（upsert） -->
+    <insert id="addScore">
+        INSERT INTO zhw_user_score (user_id, story_id, score, create_time, update_time)
+        VALUES (#{userId}, #{storyId}, #{delta}, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE
+            score = score + #{delta},
+            update_time = NOW()
+    </insert>
+
+    <select id="selectUserScore" resultMap="ScoreResult">
+        SELECT us.score_id, us.user_id, us.story_id, us.score, us.create_time, us.update_time,
+               u.nick_name, u.avatar,
+               (SELECT COUNT(1) + 1 FROM zhw_user_score WHERE story_id = #{storyId} AND score > us.score) AS rnk
+        FROM zhw_user_score us
+        LEFT JOIN zhw_user u ON u.user_id = us.user_id
+        WHERE us.user_id = #{userId} AND us.story_id = #{storyId}
+        LIMIT 1
+    </select>
+
+</mapper>

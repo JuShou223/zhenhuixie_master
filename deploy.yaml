@@ -1,0 +1,60 @@
+# 真会写 (故事社区) 部署配置
+# 项目路径: /Users/xuyiming/Desktop/zhenhuixie_master
+
+server:
+  host: 8.147.71.151
+  user: root
+  auth: sshpass
+  password: Xym@test1
+
+targets:
+  jar:
+    desc: Spring Boot 后端
+    build:
+      cwd: ./RuoYi-Vue
+      run: mvn clean package -Dmaven.test.skip=true
+    upload:
+      file: ruoyi-admin/target/ruoyi-admin.jar
+      to: /tmp/ruoyi-admin.jar
+    deploy:
+      remote: /var/data/deploy.sh jar
+    verify:
+      - docker: java
+      - url: http://8.147.71.151:8080/
+        expect: 200
+
+  h5:
+    desc: UniApp H5 移动端
+    build:
+      cwd: ./uni-app-starter
+      run: npm run build:h5
+    upload:
+      dir: dist/build/h5
+      to: /tmp/zhw_h5/
+      pack: tar
+    deploy:
+      remote: /var/data/deploy.sh h5
+    verify:
+      - url: http://8.147.71.151
+        expect: 200
+      - content: true
+
+  admin:
+    desc: Vue2 管理后台
+    build:
+      cwd: ./RuoYi-Vue/ruoyi-ui
+      run: VUE_APP_PUBLIC_PATH=/admin/ npm run build:prod
+    upload:
+      dir: dist
+      to: /tmp/zhw_admin/
+      pack: tar
+    deploy:
+      remote: /var/data/deploy.sh admin
+    verify:
+      - url: http://8.147.71.151/admin/
+        expect: 200
+
+  all:
+    desc: 全量部署
+    deploy:
+      remote: /var/data/deploy.sh all

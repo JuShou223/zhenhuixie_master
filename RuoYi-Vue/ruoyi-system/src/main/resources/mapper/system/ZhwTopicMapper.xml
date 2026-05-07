@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ZhwTopicMapper">
+
+    <resultMap id="TopicResult" type="ZhwTopic">
+        <id     property="topicId"      column="topic_id"/>
+        <result property="title"        column="title"/>
+        <result property="banner"       column="banner"/>
+        <result property="announcement" column="announcement"/>
+        <result property="startTime"    column="start_time"/>
+        <result property="endTime"      column="end_time"/>
+        <result property="status"       column="status"/>
+        <result property="delFlag"      column="del_flag"/>
+        <result property="createBy"     column="create_by"/>
+        <result property="createTime"   column="create_time"/>
+        <result property="updateBy"     column="update_by"/>
+        <result property="updateTime"   column="update_time"/>
+        <result property="storyCount"   column="story_count"/>
+    </resultMap>
+
+    <select id="selectTopicList" resultMap="TopicResult">
+        SELECT t.topic_id, t.title, t.banner, t.announcement,
+               t.start_time, t.end_time, t.status, t.del_flag,
+               t.create_by, t.create_time, t.update_by, t.update_time,
+               (SELECT COUNT(1) FROM zhw_story_topic st WHERE st.topic_id = t.topic_id) AS story_count
+        FROM zhw_topic t
+        WHERE t.del_flag = '0'
+        ORDER BY t.create_time DESC
+    </select>
+
+    <select id="selectTopicById" parameterType="Long" resultMap="TopicResult">
+        SELECT t.topic_id, t.title, t.banner, t.announcement,
+               t.start_time, t.end_time, t.status, t.del_flag,
+               t.create_by, t.create_time, t.update_by, t.update_time,
+               (SELECT COUNT(1) FROM zhw_story_topic st WHERE st.topic_id = t.topic_id) AS story_count
+        FROM zhw_topic t
+        WHERE t.topic_id = #{topicId} AND t.del_flag = '0'
+    </select>
+
+    <insert id="insertTopic" parameterType="ZhwTopic" useGeneratedKeys="true" keyProperty="topicId">
+        INSERT INTO zhw_topic (title, banner, announcement, start_time, end_time, status, del_flag, create_by, create_time)
+        VALUES (#{title}, #{banner}, #{announcement}, #{startTime}, #{endTime}, '0', '0', #{createBy}, NOW())
+    </insert>
+
+    <update id="updateTopic" parameterType="ZhwTopic">
+        UPDATE zhw_topic
+        <set>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="banner != null">banner = #{banner},</if>
+            <if test="announcement != null">announcement = #{announcement},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="status != null">status = #{status},</if>
+            update_by = #{updateBy},
+            update_time = NOW()
+        </set>
+        WHERE topic_id = #{topicId}
+    </update>
+
+    <update id="deleteTopic">
+        UPDATE zhw_topic SET del_flag = '2' WHERE topic_id = #{topicId}
+    </update>
+
+    <insert id="insertStoryTopic">
+        INSERT IGNORE INTO zhw_story_topic (story_id, topic_id, create_time)
+        VALUES (#{storyId}, #{topicId}, NOW())
+    </insert>
+
+    <delete id="deleteStoryTopic">
+        DELETE FROM zhw_story_topic WHERE story_id = #{storyId} AND topic_id = #{topicId}
+    </delete>
+
+    <select id="selectTopicStories" resultMap="com.ruoyi.system.mapper.ZhwStoryMapper.StoryResult">
+        SELECT s.story_id, s.title, s.cover, s.setting_content, s.user_id,
+               s.view_count, s.like_count, s.comment_count, s.branch_count,
+               s.participant_count, s.heat_score, s.status, s.del_flag,
+               s.create_by, s.create_time, s.update_by, s.update_time,
+               u.nick_name AS author_nick_name,
+               u.avatar    AS author_avatar,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = s.story_id AND l.target_type = 0), 0) AS liked,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_mark m WHERE m.user_id = #{currentUserId} AND m.story_id = s.story_id AND m.branch_id = 0), 0) AS marked
+        FROM zhw_story s
+        JOIN zhw_story_topic st ON st.story_id = s.story_id AND st.topic_id = #{topicId}
+        LEFT JOIN zhw_user u ON u.user_id = s.user_id
+        WHERE s.del_flag = '0' AND s.status = '0'
+        <choose>
+            <when test="sortType == 'hot'">
+                ORDER BY s.heat_score DESC
+            </when>
+            <otherwise>
+                ORDER BY s.update_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="countActiveTopics" resultType="int">
+        SELECT COUNT(1) FROM zhw_topic WHERE del_flag = '0' AND status = '0'
+    </select>
+
+    <select id="selectTopicNamesByStoryId" parameterType="Long" resultType="String">
+        SELECT t.title FROM zhw_topic t
+        JOIN zhw_story_topic st ON st.topic_id = t.topic_id
+        WHERE st.story_id = #{storyId} AND t.del_flag = '0'
+    </select>
+
+</mapper>

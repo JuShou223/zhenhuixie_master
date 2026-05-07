@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ZhwBranchMapper">
+
+    <resultMap id="BranchResult" type="ZhwBranch">
+        <id     property="branchId"             column="branch_id"/>
+        <result property="storyId"              column="story_id"/>
+        <result property="parentId"             column="parent_id"/>
+        <result property="parentType"           column="parent_type"/>
+        <result property="chapterNum"           column="chapter_num"/>
+        <result property="chapterTitle"         column="chapter_title"/>
+        <result property="content"              column="content"/>
+        <result property="userId"               column="user_id"/>
+        <result property="likeCount"            column="like_count"/>
+        <result property="viewCount"            column="view_count"/>
+        <result property="commentCount"         column="comment_count"/>
+        <result property="childCount"           column="child_count"/>
+        <result property="delFlag"              column="del_flag"/>
+        <result property="createBy"             column="create_by"/>
+        <result property="createTime"           column="create_time"/>
+        <result property="updateBy"             column="update_by"/>
+        <result property="updateTime"           column="update_time"/>
+        <result property="authorNickName"       column="author_nick_name"/>
+        <result property="authorAvatar"         column="author_avatar"/>
+        <result property="liked"                column="liked"/>
+        <result property="marked"               column="marked"/>
+        <result property="parentContentPreview" column="parent_content_preview"/>
+        <result property="storyTitle"           column="story_title"/>
+    </resultMap>
+
+    <sql id="selectBranchVo">
+        SELECT b.branch_id, b.story_id, b.parent_id, b.parent_type, b.chapter_num,
+               b.chapter_title, b.content, b.user_id, b.like_count, b.view_count,
+               b.comment_count, b.child_count, b.del_flag, b.create_by, b.create_time,
+               b.update_by, b.update_time,
+               u.nick_name AS author_nick_name,
+               u.avatar    AS author_avatar,
+               s.title     AS story_title
+        FROM zhw_branch b
+        LEFT JOIN zhw_user u ON u.user_id = b.user_id
+        LEFT JOIN zhw_story s ON s.story_id = b.story_id
+        WHERE b.del_flag = '0'
+    </sql>
+
+    <select id="selectBranchById" resultMap="BranchResult">
+        SELECT q.*,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.branch_id AND l.target_type = 1), 0) AS liked,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_mark m WHERE m.user_id = #{currentUserId} AND m.branch_id = q.branch_id), 0) AS marked
+        FROM (
+            <include refid="selectBranchVo"/>
+            AND b.branch_id = #{branchId}
+        ) q
+    </select>
+
+    <select id="selectFirstLevelBranches" resultMap="BranchResult">
+        SELECT q.*,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.branch_id AND l.target_type = 1), 0) AS liked,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_mark m WHERE m.user_id = #{currentUserId} AND m.branch_id = q.branch_id), 0) AS marked
+        FROM (
+            <include refid="selectBranchVo"/>
+            AND b.story_id = #{storyId} AND b.parent_id = 0
+        ) q
+        ORDER BY q.create_time ASC
+    </select>
+
+    <select id="selectChildBranches" resultMap="BranchResult">
+        SELECT q.*,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.branch_id AND l.target_type = 1), 0) AS liked,
+               IF(#{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_mark m WHERE m.user_id = #{currentUserId} AND m.branch_id = q.branch_id), 0) AS marked
+        FROM (
+            <include refid="selectBranchVo"/>
+            AND b.parent_id = #{parentId}
+        ) q
+        ORDER BY q.create_time ASC
+    </select>
+
+    <insert id="insertBranch" parameterType="ZhwBranch" useGeneratedKeys="true" keyProperty="branchId">
+        INSERT INTO zhw_branch (story_id, parent_id, parent_type, chapter_num, chapter_title,
+            content, user_id, like_count, view_count, comment_count, child_count, del_flag,
+            create_by, create_time)
+        VALUES (#{storyId}, #{parentId}, #{parentType}, #{chapterNum}, #{chapterTitle},
+            #{content}, #{userId}, 0, 0, 0, 0, '0', #{createBy}, NOW())
+    </insert>
+
+    <update id="updateBranch" parameterType="ZhwBranch">
+        UPDATE zhw_branch
+        <set>
+            <if test="chapterTitle != null">chapter_title = #{chapterTitle},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            update_by = #{updateBy},
+            update_time = NOW()
+        </set>
+        WHERE branch_id = #{branchId}
+    </update>
+
+    <update id="incrementViewCount">
+        UPDATE zhw_branch SET view_count = view_count + 1 WHERE branch_id = #{branchId}
+    </update>
+
+    <update id="updateLikeCount">
+        UPDATE zhw_branch SET like_count = like_count + #{delta} WHERE branch_id = #{branchId}
+    </update>
+
+    <update id="updateCommentCount">
+        UPDATE zhw_branch SET comment_count = comment_count + #{delta} WHERE branch_id = #{branchId}
+    </update>
+
+    <update id="updateChildCount">
+        UPDATE zhw_branch SET child_count = child_count + #{delta} WHERE branch_id = #{branchId}
+    </update>
+
+    <select id="countUserBranchesInStory" resultType="int">
+        SELECT COUNT(1) FROM zhw_branch
+        WHERE story_id = #{storyId} AND user_id = #{userId} AND del_flag = '0'
+    </select>
+
+    <select id="countPublishedByUser" resultType="int">
+        SELECT COUNT(1) FROM zhw_branch WHERE user_id = #{userId} AND del_flag = '0'
+    </select>
+
+    <select id="countReceivedContinuations" resultType="int">
+        SELECT COUNT(1) FROM zhw_branch
+        WHERE parent_id IN (
+            SELECT branch_id FROM zhw_branch WHERE user_id = #{userId} AND del_flag = '0'
+        ) AND user_id != #{userId} AND del_flag = '0'
+    </select>
+
+    <select id="sumLikesReceivedByUser" resultType="long">
+        SELECT COALESCE(SUM(like_count), 0) FROM zhw_branch WHERE user_id = #{userId} AND del_flag = '0'
+    </select>
+
+    <select id="selectAllBranchesByStoryId" parameterType="Long" resultMap="BranchResult">
+        SELECT b.branch_id, b.story_id, b.parent_id, b.parent_type,
+               b.chapter_num, b.chapter_title, b.content, b.user_id,
+               b.like_count, b.view_count, b.comment_count, b.child_count,
+               b.del_flag, b.create_by, b.create_time,
+               u.nick_name AS author_nick_name
+        FROM zhw_branch b
+        LEFT JOIN zhw_user u ON u.user_id = b.user_id
+        WHERE b.story_id = #{storyId} AND b.del_flag = '0'
+        ORDER BY b.parent_id ASC, b.create_time ASC
+    </select>
+
+</mapper>

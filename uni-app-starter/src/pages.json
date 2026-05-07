@@ -1,0 +1,105 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/login/index",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false, "animationType": "fade-in", "animationDuration": 200 }
+    },
+    {
+      "path": "pages/register/index",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false, "animationType": "fade-in", "animationDuration": 200 }
+    },
+    {
+      "path": "pages/story/create",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false, "animationType": "slide-in-bottom", "animationDuration": 300 }
+    },
+    {
+      "path": "pages/story/detail",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/story/featured",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/story/comments",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/story/branch-create",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false, "animationType": "slide-in-bottom", "animationDuration": 300 }
+    },
+    {
+      "path": "pages/story/branch-detail",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/story/ranking",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/my/index",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/my/edit",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/my/messages",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/my/marks",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/my/stories",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/my/mark-updates",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/topic/list",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/topic/detail",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    },
+    {
+      "path": "pages/topic/square",
+      "style": { "navigationStyle": "custom", "enablePullDownRefresh": false }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "真会写",
+    "navigationBarBackgroundColor": "#FDFCF8",
+    "backgroundColor": "#FDFCF8",
+    "animationType": "slide-in-right",
+    "animationDuration": 280
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#8C8A84",
+    "selectedColor": "#FFC107",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/my/index",
+        "text": "我的"
+      }
+    ]
+  }
+}

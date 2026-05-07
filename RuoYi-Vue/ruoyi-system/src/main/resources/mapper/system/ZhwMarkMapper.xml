@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ZhwMarkMapper">
+
+    <resultMap id="MarkResult" type="ZhwMark">
+        <id     property="markId"                 column="mark_id"/>
+        <result property="storyId"                column="story_id"/>
+        <result property="branchId"               column="branch_id"/>
+        <result property="userId"                 column="user_id"/>
+        <result property="lastReadTime"           column="last_read_time"/>
+        <result property="createTime"             column="create_time"/>
+        <result property="storyTitle"             column="story_title"/>
+        <result property="targetAuthorNickName"   column="target_author_nick_name"/>
+        <result property="targetContentPreview"   column="target_content_preview"/>
+        <result property="chapterName"            column="chapter_name"/>
+        <result property="hasUpdate"              column="has_update"/>
+        <result property="cover"                  column="cover"/>
+        <result property="targetAuthorAvatar"     column="target_author_avatar"/>
+    </resultMap>
+
+    <select id="selectMark" resultMap="MarkResult">
+        SELECT mark_id, story_id, branch_id, user_id, last_read_time, create_time
+        FROM zhw_mark
+        WHERE user_id = #{userId} AND story_id = #{storyId} AND branch_id = #{branchId}
+        LIMIT 1
+    </select>
+
+    <select id="selectUserMarkList" resultMap="MarkResult">
+        SELECT m.mark_id, m.story_id, m.branch_id, m.user_id, m.last_read_time, m.create_time,
+               s.title AS story_title,
+               s.cover AS cover,
+               /* 如果标记的是故事本身(branch_id=0)，作者是故事创建者；否则是分支作者 */
+               IF(m.branch_id = 0, su.nick_name, bu.nick_name) AS target_author_nick_name,
+               IF(m.branch_id = 0, su.avatar, bu.avatar) AS target_author_avatar,
+               /* 内容摘要：故事标记取设定内容前50字，分支标记取分支内容前50字 */
+               IF(m.branch_id = 0,
+                  LEFT(s.setting_content, 50),
+                  LEFT(b.content, 50)) AS target_content_preview,
+               /* 章节名：标记故事本身时不显示章节名 */
+               IF(m.branch_id = 0, NULL,
+                  CONCAT('第', b.chapter_num, '章 ', IFNULL(b.chapter_title, ''))) AS chapter_name,
+               /* 是否有新内容：分支的last_read_time之后有新子分支 */
+               IF(m.branch_id = 0,
+                  (SELECT COUNT(1) > 0 FROM zhw_branch nb
+                   WHERE nb.story_id = m.story_id AND nb.del_flag = '0'
+                   AND nb.create_time > IFNULL(m.last_read_time, '1970-01-01')),
+                  (SELECT COUNT(1) > 0 FROM zhw_branch nb
+                   WHERE nb.parent_id = m.branch_id AND nb.del_flag = '0'
+                   AND nb.create_time > IFNULL(m.last_read_time, '1970-01-01'))
+               ) AS has_update
+        FROM zhw_mark m
+        LEFT JOIN zhw_story s    ON s.story_id  = m.story_id
+        LEFT JOIN zhw_user su    ON su.user_id  = s.user_id
+        LEFT JOIN zhw_branch b   ON b.branch_id = m.branch_id
+        LEFT JOIN zhw_user bu    ON bu.user_id  = b.user_id
+        WHERE m.user_id = #{userId}
+        ORDER BY m.create_time DESC
+    </select>
+
+    <insert id="insertMark" parameterType="ZhwMark" useGeneratedKeys="true" keyProperty="markId">
+        INSERT INTO zhw_mark (story_id, branch_id, user_id, last_read_time, create_time)
+        VALUES (#{storyId}, #{branchId}, #{userId}, NOW(), NOW())
+    </insert>
+
+    <delete id="deleteMark">
+        DELETE FROM zhw_mark
+        WHERE user_id = #{userId} AND story_id = #{storyId} AND branch_id = #{branchId}
+    </delete>
+
+    <update id="updateLastReadTime">
+        UPDATE zhw_mark SET last_read_time = NOW()
+        WHERE user_id = #{userId} AND story_id = #{storyId} AND branch_id = #{branchId}
+    </update>
+
+    <select id="countMarksByTarget" resultType="int">
+        SELECT COUNT(1) FROM zhw_mark
+        WHERE story_id = #{storyId} AND branch_id = #{branchId}
+    </select>
+
+</mapper>
