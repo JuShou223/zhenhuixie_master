@@ -56,10 +56,10 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { getMyStories } from '@/apis/modules/user.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { getMyStories } from '@/apis/modules/user'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')
 const list = ref([])

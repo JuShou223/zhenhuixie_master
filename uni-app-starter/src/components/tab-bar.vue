@@ -51,12 +51,12 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, getCurrentInstance } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { TABBAR_LIST, useTabbar } from '@/hooks/useTabbar'
-import { useUserStore } from '@/stores/user.js'
-import { getUnreadBadge } from '@/apis/modules/notification.js'
+import { useUserStore } from '@/stores/user'
+import { getUnreadBadge } from '@/apis/modules/notification'
 import domQueryService from '@/common/domQueryService';
 const instance = getCurrentInstance()
 
@@ -90,7 +90,7 @@ function goCreate() {
 }
 
 onMounted(() => {
-  domQueryService.registerHandler('tabbar', instance);
+  domQueryService.registerHandler('tabbar', instance as any);
 
   handleSetTabbar(props.defaultTab)
   try {

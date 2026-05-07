@@ -119,7 +119,7 @@
                 <view v-if="child.childCount > 0" class="flex">
                   <image v-for="(c, idx) in (child._childAvatars || []).slice(0, 3)" :key="idx" :src="resolveAvatar(c)"
                     class="w-5 h-5 rounded-full border-2 border-white"
-                    :style="`margin-left: ${idx > 0 ? '-6px' : '0'};`" mode="aspectFill" />
+                    :style="`margin-left: ${Number(idx) > 0 ? '-6px' : '0'};`" mode="aspectFill" />
                 </view>
                 <text class="text-[11px] px-2.5 py-1 rounded-full font-semibold bg-yellow-50 text-accent-dark">
                   {{ child.childCount > 0 ? `${child.childCount}个后续` : '暂无后续，点击创作' }}
@@ -181,14 +181,14 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, computed, onMounted, nextTick } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
 import { onShow } from '@dcloudio/uni-app'
-import { useUserStore } from '@/stores/user.js'
-import { getBranchDetail, getBranchChildren } from '@/apis/modules/branch.js'
-import { toggleLike as apiToggleLike, toggleMark as apiToggleMark } from '@/apis/modules/interaction.js'
+import { useUserStore } from '@/stores/user'
+import { getBranchDetail, getBranchChildren } from '@/apis/modules/branch'
+import { toggleLike as apiToggleLike, toggleMark as apiToggleMark } from '@/apis/modules/interaction'
 import UserGuide from '@/components/user-guide.vue'
 import { GUIDE_TYPES } from '@/hooks/useGlobalUserGuide'
 import LoginModal from '@/components/login-modal.vue'
@@ -236,7 +236,7 @@ onShow(() => {
   }, 800)
 })
 
-const branch = ref({})
+const branch = ref<Record<string, any>>({})
 const children = ref([])
 const contextExpanded = ref(false)
 const childPage = ref(1)
@@ -359,9 +359,9 @@ onMounted(() => {
 })
 </script>
 
-<script>
+<script lang="ts">
 export default {
-  onShareAppMessage() {
+  onShareAppMessage(this: any) {
     return {
       title: this.branch?.chapterTitle || '真会写 - 分支详情',
       path: `/pages/story/branch-detail?branchId=${this.branchId}&storyId=${this.storyId}`

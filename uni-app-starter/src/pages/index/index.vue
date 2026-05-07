@@ -101,12 +101,12 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { useUserStore } from '@/stores/user.js'
-import { getStoryList } from '@/apis/modules/story.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { useUserStore } from '@/stores/user'
+import { getStoryList } from '@/apis/modules/story'
 import TabBar from '@/components/tab-bar.vue'
 import UserGuide from '@/components/user-guide.vue'
 import { GUIDE_TYPES } from '@/hooks/useGlobalUserGuide'

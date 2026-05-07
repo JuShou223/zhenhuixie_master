@@ -96,10 +96,10 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useUserStore } from '@/stores/user.js'
-import { login } from '@/apis/modules/common.js'
+import { useUserStore } from '@/stores/user'
+import { login } from '@/apis/modules/common'
 
 const userStore = useUserStore()
 

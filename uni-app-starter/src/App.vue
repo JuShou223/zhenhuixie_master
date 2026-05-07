@@ -4,7 +4,7 @@
  * @LastEditTime: 2026-04-16 13:35:58
  * @Description:
 -->
-<script setup>
+<script setup lang="ts">
 // App.vue 全局样式和生命周期
 </script>
 

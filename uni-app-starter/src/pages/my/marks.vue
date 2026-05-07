@@ -72,11 +72,11 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, onMounted } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { getMarkList, toggleMark } from '@/apis/modules/interaction.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { getMarkList, toggleMark } from '@/apis/modules/interaction'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')
 const list = ref([])

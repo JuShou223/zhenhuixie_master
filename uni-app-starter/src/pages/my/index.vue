@@ -193,16 +193,16 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, onMounted } from 'vue'
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore } from '@/stores/user'
 import TabBar from '@/components/tab-bar.vue'
 import Modal from '@/components/modal.vue'
 import LoginModal from '@/components/login-modal.vue'
-import { getMyProfile } from '@/apis/modules/user.js'
-import { getMarkList } from '@/apis/modules/interaction.js'
-import { logout as apiLogout } from '@/apis/modules/common.js'
+import { getMyProfile } from '@/apis/modules/user'
+import { getMarkList } from '@/apis/modules/interaction'
+import { logout as apiLogout } from '@/apis/modules/common'
 import { onShow } from '@dcloudio/uni-app'
 import { useTabbar } from '@/hooks/useTabbar'
 const { handleSetTabbar } = useTabbar()
@@ -211,7 +211,7 @@ const userStore = useUserStore()
 const modalRef = ref(null)
 const loginModalRef = ref(null)
 
-const profile = ref({})
+const profile = ref<Record<string, any>>({})
 const badge = ref({ interact: 0, markUpdate: 0, topic: 0 })
 
 async function loadProfile() {

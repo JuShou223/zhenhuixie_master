@@ -114,9 +114,9 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
-import { register } from '@/apis/modules/common.js'
+import { register } from '@/apis/modules/common'
 
 const form = ref({ username: '', password: '', confirmPassword: '' })
 const loading = ref(false)

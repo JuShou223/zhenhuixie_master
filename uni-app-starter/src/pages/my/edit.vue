@@ -76,13 +76,13 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, onMounted } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { useUserStore } from '@/stores/user.js'
-import { getMyProfile, updateMyProfile } from '@/apis/modules/user.js'
-import upload from '@/utils/upload.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { useUserStore } from '@/stores/user'
+import { getMyProfile, updateMyProfile } from '@/apis/modules/user'
+import upload from '@/utils/upload'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')
 const userStore = useUserStore()

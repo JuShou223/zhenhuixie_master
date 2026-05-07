@@ -63,7 +63,7 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch, nextTick, onUnmounted } from 'vue';
 import { useGlobalGuideManager } from '@/hooks/useGlobalUserGuide';
 import { useGuideManager } from '@/hooks/useGuideManager';

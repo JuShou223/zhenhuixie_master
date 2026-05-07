@@ -114,7 +114,7 @@
                     :key="idx"
                     :src="resolveAvatar(c)"
                     class="w-5 h-5 rounded-full border-2 border-white"
-                    :style="`margin-left: ${idx > 0 ? '-6px' : '0'};`"
+                    :style="`margin-left: ${Number(idx) > 0 ? '-6px' : '0'};`"
                     mode="aspectFill"
                   />
                 </view>
@@ -151,13 +151,13 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, computed, onMounted } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { getBranchChildren } from '@/apis/modules/branch.js'
-import { getStoryBranches, getStoryDetail } from '@/apis/modules/story.js'
-import { updateMarkRead } from '@/apis/modules/interaction.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { getBranchChildren } from '@/apis/modules/branch'
+import { getStoryBranches, getStoryDetail } from '@/apis/modules/story'
+import { updateMarkRead } from '@/apis/modules/interaction'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')
 const pages = getCurrentPages()

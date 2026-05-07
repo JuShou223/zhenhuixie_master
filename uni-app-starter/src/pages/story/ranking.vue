@@ -163,13 +163,13 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, computed, onMounted } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { useUserStore } from '@/stores/user.js'
-import { getStoryRanking } from '@/apis/modules/story.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { useUserStore } from '@/stores/user'
+import { getStoryRanking } from '@/apis/modules/story'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')
 const userStore = useUserStore()

@@ -48,7 +48,7 @@
   </view>
 </template>
 
-<script>
+<script lang="ts">
 import { getFeaturedStories } from '@/apis/modules/story'
 
 export default {

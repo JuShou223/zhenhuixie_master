@@ -106,7 +106,7 @@
           </view>
           <view class="flex">
             <image v-for="(user, idx) in ranking.slice(0, 5)" :key="user.userId" :src="resolveAvatar(user.avatar)"
-              class="w-7 h-7 rounded-full border-2 border-white" :style="`margin-left: ${idx > 0 ? '-8px' : '0'};`"
+              class="w-7 h-7 rounded-full border-2 border-white" :style="`margin-left: ${Number(idx) > 0 ? '-8px' : '0'};`"
               mode="aspectFill" />
           </view>
         </view>
@@ -203,7 +203,7 @@
                 <view v-if="branch.childCount > 0" class="flex">
                   <image v-for="(c, idx) in (branch.childAvatars || []).slice(0, 3)" :key="idx" :src="resolveAvatar(c)"
                     class="w-5 h-5 rounded-full border-2 border-white"
-                    :style="`margin-left: ${idx > 0 ? '-6px' : '0'};`" mode="aspectFill" />
+                    :style="`margin-left: ${Number(idx) > 0 ? '-6px' : '0'};`" mode="aspectFill" />
                 </view>
                 <view
                   class="text-[11px] px-2.5 py-1 rounded-full font-semibold active:scale-95 transition-transform duration-200"
@@ -273,14 +273,14 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, computed, onMounted, nextTick, getCurrentInstance } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
 import { onShow } from '@dcloudio/uni-app'
-import { useUserStore } from '@/stores/user.js'
-import { getStoryDetail, getStoryBranches, getStoryRanking } from '@/apis/modules/story.js'
-import { toggleLike as apiToggleLike, toggleMark as apiToggleMark } from '@/apis/modules/interaction.js'
+import { useUserStore } from '@/stores/user'
+import { getStoryDetail, getStoryBranches, getStoryRanking } from '@/apis/modules/story'
+import { toggleLike as apiToggleLike, toggleMark as apiToggleMark } from '@/apis/modules/interaction'
 import UserGuide from '@/components/user-guide.vue'
 import { GUIDE_TYPES } from '@/hooks/useGlobalUserGuide'
 import LoginModal from '@/components/login-modal.vue'
@@ -327,7 +327,7 @@ onShow(() => {
   }, 800)
 })
 
-const story = ref({})
+const story = ref<Record<string, any>>({})
 const ranking = ref([])
 const branches = ref([])
 const settingExpanded = ref(false)
@@ -487,9 +487,9 @@ onMounted(() => {
 })
 </script>
 
-<script>
+<script lang="ts">
 export default {
-  onShareAppMessage() {
+  onShareAppMessage(this: any) {
     return {
       title: this.story?.title || '真会写 - 故事社区',
       path: `/pages/story/detail?storyId=${this.storyId}`

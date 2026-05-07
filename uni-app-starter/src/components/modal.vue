@@ -115,7 +115,7 @@
   </up-popup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
 const emit = defineEmits(['cancel', 'confirm', 'close', 'input-change', 'select-change'])
@@ -166,8 +166,8 @@ const showCharCount = ref(false)
 const autoFocus = ref(true)
 const options = ref([])
 const defaultSelected = ref([])
-const onConfirm = ref(() => { })
-const onCancel = ref(() => { })
+const onConfirm = ref<(...args: any[]) => void>(() => { })
+const onCancel = ref<(...args: any[]) => void>(() => { })
 const selectedOptions = ref([...defaultSelected.value])
 
 watch(() => defaultSelected.value, (newVal) => {

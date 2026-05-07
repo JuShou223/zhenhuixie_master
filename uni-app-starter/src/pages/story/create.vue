@@ -125,16 +125,16 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { createStory } from '@/apis/modules/story.js'
-import { joinTopic, getTopicList } from '@/apis/modules/topic.js'
-import upload from '@/utils/upload.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { createStory } from '@/apis/modules/story'
+import { joinTopic, getTopicList } from '@/apis/modules/topic'
+import upload from '@/utils/upload'
 import UserGuide from '@/components/user-guide.vue'
 import LoginModal from '@/components/login-modal.vue'
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore } from '@/stores/user'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')
 const userStore = useUserStore()

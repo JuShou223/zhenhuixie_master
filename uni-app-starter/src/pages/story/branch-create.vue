@@ -101,12 +101,12 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { getStoryDetail } from '@/apis/modules/story.js'
-import { getBranchDetail, createBranch } from '@/apis/modules/branch.js'
+import { getStoryDetail } from '@/apis/modules/story'
+import { getBranchDetail, createBranch } from '@/apis/modules/branch'
 import UserGuide from '@/components/user-guide.vue'
 
 const pages = getCurrentPages()

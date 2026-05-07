@@ -125,7 +125,7 @@
       </view>
       <view class="flex items-center gap-3 w-full">
         <image
-          :src="resolveAvatar(userStore.profile?.avatar)"
+          :src="resolveAvatar(userStore.profile?.avatar as string)"
           class="w-10 h-10 rounded-full flex-shrink-0"
           mode="aspectFill"
         />
@@ -153,15 +153,15 @@
   </view>
 </template>
 
-<script setup>
-import { resolveAvatar } from '@/utils/avatar.js'
+<script setup lang="ts">
+import { resolveAvatar } from '@/utils/avatar'
 import { ref, onMounted } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { useUserStore } from '@/stores/user.js'
-import { getCommentList, getCommentReplies, addComment } from '@/apis/modules/comment.js'
-import { toggleLike as apiToggleLike } from '@/apis/modules/interaction.js'
-import { getBranchDetail } from '@/apis/modules/branch.js'
-import { timeAgo } from '@/utils/timeago.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { useUserStore } from '@/stores/user'
+import { getCommentList, getCommentReplies, addComment } from '@/apis/modules/comment'
+import { toggleLike as apiToggleLike } from '@/apis/modules/interaction'
+import { getBranchDetail } from '@/apis/modules/branch'
+import { timeAgo } from '@/utils/timeago'
 import LoginModal from '@/components/login-modal.vue'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')

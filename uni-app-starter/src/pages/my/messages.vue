@@ -90,11 +90,11 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getNotificationList, markAsRead } from '@/apis/modules/notification.js'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { timeAgo } from '@/utils/timeago.js'
+import { getNotificationList, markAsRead } from '@/apis/modules/notification'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { timeAgo } from '@/utils/timeago'
 
 const { scrollHeight } = useScrollHeight('#scroll-header')
 const tabs = [

@@ -94,16 +94,16 @@
   </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useScrollHeight } from '@/utils/useScrollHeight.js'
-import { getTopicDetail } from '@/apis/modules/topic.js'
+import { useScrollHeight } from '@/utils/useScrollHeight'
+import { getTopicDetail } from '@/apis/modules/topic'
 
 const { scrollHeight } = useScrollHeight('#scroll-header', 80)
 const pages = getCurrentPages()
 const topicId = Number(pages[pages.length - 1]?.options?.topicId || 0)
 
-const topic = ref({})
+const topic = ref<Record<string, any>>({})
 
 function formatDate(dateStr) {
   if (!dateStr) return '--'
@@ -127,9 +127,9 @@ onMounted(async () => {
 })
 </script>
 
-<script>
+<script lang="ts">
 export default {
-  onShareAppMessage() {
+  onShareAppMessage(this: any) {
     return {
       title: this.topic?.title ? `#${this.topic.title}` : '真会写 - 话题挑战',
       path: `/pages/topic/detail?topicId=${this.topicId}`
