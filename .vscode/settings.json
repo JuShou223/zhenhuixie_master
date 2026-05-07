@@ -1,0 +1,4 @@
+{
+  "typescript.tsdk": "uni-app-starter/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
