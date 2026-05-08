@@ -95,10 +95,13 @@ RuoYi-Vue/
 │       │   ├── ZhwNotificationController.java# /zhw/notification 消息通知
 │       │   ├── ZhwTopicController.java       # /zhw/topic 话题挑战
 │       │   ├── ZhwUserController.java        # /zhw/user 用户主页+编辑资料
-│       │   ├── AdminZhwTopicController.java  # /admin/zhw/topic 话题管理（管理端）
-│       │   ├── AdminZhwStoryController.java  # /admin/zhw/story 故事管理（管理端）
-│       │   ├── AdminZhwCommentController.java# /admin/zhw/comment 评论审核（管理端）
-│       │   └── AdminZhwDashboardController.java # /admin/zhw/dashboard 数据概览（管理端）
+│       │   ├── AdminZhwDashboardController.java  # /admin/zhw/dashboard 数据概览（管理端）
+│       │   ├── AdminZhwTopicController.java      # /admin/zhw/topic 话题管理（管理端）
+│       │   ├── AdminZhwStoryController.java      # /admin/zhw/story 故事管理（管理端）
+│       │   ├── AdminZhwCommentController.java    # /admin/zhw/comment 评论审核（管理端）
+│       │   ├── AdminZhwCollectionController.java # /admin/zhw/collection 精选故事（管理端）
+│       │   ├── AdminZhwSensitiveWordController.java # /admin/zhw/sensitive 敏感词管理（管理端）
+│       │   └── AdminZhwUserController.java       # /admin/zhw/user 用户管理（管理端）
 │       ├── common/     # 验证码、通用上传
 │       ├── system/     # RuoYi 系统管理（用户/角色/菜单等）
 │       └── monitor/    # 系统监控
@@ -130,18 +133,26 @@ Mapper XML 在 `ruoyi-system/src/main/resources/mapper/system/Zhw*Mapper.xml`。
 ```
 ruoyi-ui/src/
 ├── views/zhw/
-│   ├── dashboard/index.vue  # 数据概览（平台统计卡片 + 趋势 + Top10）
-│   ├── topic/index.vue      # 话题管理（CRUD + 状态切换）
-│   ├── story/index.vue      # 故事管理（列表 + 禁用/恢复 + 删除）
-│   └── comment/index.vue    # 评论审核（列表 + 强制删除）
+│   ├── dashboard/index.vue    # 数据概览（平台统计卡片 + 趋势 + Top10）
+│   ├── topic/index.vue        # 话题管理（CRUD + 状态切换）
+│   ├── story/index.vue        # 故事管理（列表 + 禁用/恢复 + 删除）
+│   ├── comment/index.vue      # 评论审核（列表 + 强制删除）
+│   ├── collection/index.vue   # 精选故事（设置/取消精选）
+│   ├── sensitiveWord/index.vue# 敏感词管理（CRUD + 刷新缓存）
+│   └── user/index.vue         # 用户管理（列表 + 停用 + 重置密码）
 └── api/zhw/
-    ├── dashboard.js         # 统计 API
-    ├── topic.js             # 话题 CRUD API
-    ├── story.js             # 故事管理 API
-    └── comment.js           # 评论审核 API
+    ├── dashboard.js           # 统计 API
+    ├── topic.js               # 话题 CRUD API
+    ├── story.js               # 故事管理 API
+    ├── comment.js             # 评论审核 API
+    ├── collection.js          # 精选故事 API
+    ├── sensitiveWord.js       # 敏感词管理 API
+    └── user.js                # 用户管理 API
 ```
 
-菜单通过 `zhw_admin_menu.sql` 注入 `sys_menu`（menu_id 段 2000-2032）。
+菜单通过 `zhw_admin_menu.sql` 注入 `sys_menu`（menu_id 段 2000-2052）：
+- 2000 故事社区（父菜单）/ 2001 数据概览 / 2002 话题管理 / 2003 故事管理
+- 2004 评论审核 / 2005 精选故事 / 2006 敏感词管理 / 2007 用户管理
 
 ### 数据库
 
