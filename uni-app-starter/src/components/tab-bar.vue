@@ -1,7 +1,7 @@
 <!--
  * @Date: 2026-05-06 12:52:49
  * @LastEditors: 徐一鸣
- * @LastEditTime: 2026-05-07 15:47:04
+ * @LastEditTime: 2026-05-08 10:22:44
  * @Description:
 -->
 <template>
@@ -35,11 +35,10 @@
             <view class="relative">
               <text :class="[tab.icon, activeTab === tab.value ? 'text-accent' : 'text-muted']"
                 class="iconfont text-xl leading-none transition-colors duration-200"></text>
-              <view
-                v-if="tab.value === 'my' && unreadCount > 0"
+              <view v-if="tab.value === 'my' && unreadCount > 0"
                 class="absolute flex items-center justify-center rounded-full bg-red-500 text-white font-bold"
-                style="top: -4px; right: -7px; min-width: 16px; height: 16px; font-size: 10px; font-family: 'Outfit', sans-serif; padding: 0 3px; border: 1.5px solid white;"
-              >{{ unreadCount > 99 ? '99+' : unreadCount }}</view>
+                style="top: -4px; right: -7px; min-width: 16px; height: 16px; font-size: 10px; font-family: 'Outfit', sans-serif; padding: 0 3px; border: 1.5px solid white;">
+                {{ unreadCount > 99 ? '99+' : unreadCount }}</view>
             </view>
             <text class="text-[11px] font-semibold mt-0.5 transition-colors duration-200"
               :class="activeTab === tab.value ? 'text-accent' : 'text-muted'"
@@ -65,7 +64,7 @@ const props = defineProps({
 })
 
 const userStore = useUserStore()
-const { activeTabbar, handleSetTabbar } = useTabbar()
+const { activeTabbar, handleSetTabbar, loadTabbarChangeListener } = useTabbar()
 const barHeight = ref('50px')
 const safeBottom = ref('0px')
 
@@ -93,11 +92,12 @@ onMounted(() => {
   domQueryService.registerHandler('tabbar', instance);
 
   handleSetTabbar(props.defaultTab)
+  loadTabbarChangeListener()
   try {
     const sys = uni.getSystemInfoSync()
     if (sys.safeAreaInsets?.bottom) {
       safeBottom.value = sys.safeAreaInsets.bottom + 'px'
     }
-  } catch { }
+  } catch { /* ignore */ }
 })
 </script>

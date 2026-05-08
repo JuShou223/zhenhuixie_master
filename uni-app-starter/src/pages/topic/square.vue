@@ -159,10 +159,14 @@ function goCreate() {
 }
 
 onMounted(async () => {
-  const res = await getTopicDetail(topicId)
-  if (res && res.data) {
-    topicTitle.value = res.data.title
-    totalViews.value = res.data.viewCount || '0'
+  try {
+    const res = await getTopicDetail(topicId)
+    if (res && res.data) {
+      topicTitle.value = res.data.title
+      totalViews.value = res.data.viewCount || '0'
+    }
+  } catch {
+    uni.showToast({ title: '加载失败，请返回重试', icon: 'none' })
   }
   fetchList()
 })

@@ -21,8 +21,8 @@
     </scroll-view>
 
     <!-- Story Grid -->
-    <scroll-view scroll-y :style="{ height: scrollHeight + 'px' }" @scroll="onScroll" @scrolltolower="loadMore" refresher-enabled
-      :refresher-triggered="refreshing" @refresherrefresh="onRefresh">
+    <scroll-view scroll-y :style="{ height: scrollHeight + 'px' }" @scroll="onScroll" @scrolltolower="loadMore"
+      refresher-enabled :refresher-triggered="refreshing" @refresherrefresh="onRefresh">
       <!-- 骨架屏 -->
       <view v-if="loading && list.length === 0" class="px-4 pt-2 grid grid-cols-2 gap-3">
         <view v-for="i in 4" :key="'s' + i"
@@ -40,8 +40,7 @@
       </view>
 
       <view v-else class="px-4 pt-2 grid grid-cols-2 gap-3 max-w-screen-xl mx-auto">
-        <view v-for="(story, index) in list" :key="story.storyId"
-          :id="index === 0 ? 'guide-first-story' : undefined"
+        <view v-for="(story, index) in list" :key="story.storyId" :id="index === 0 ? 'guide-first-story' : undefined"
           class="bg-white rounded-lg overflow-hidden shadow-card border border-gray-100 active:scale-[0.98] transition-transform duration-200"
           @tap="goDetail(story.storyId)">
           <!-- Cover -->
@@ -146,7 +145,7 @@ const GUIDE_STEPS_CONFIG = {
 
 let guideChecked = false
 onShow(() => {
-  fetchList()
+  onRefresh()
   handleSetTabbar('home')
 })
 

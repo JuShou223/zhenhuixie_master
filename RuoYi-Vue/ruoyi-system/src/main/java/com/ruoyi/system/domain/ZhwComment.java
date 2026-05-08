@@ -26,6 +26,8 @@ public class ZhwComment extends BaseEntity {
     private Long userId;
     @Schema(description = "点赞数")
     private Integer likeCount;
+    @Schema(description = "回复数（仅根评论返回）")
+    private Integer commentCount;
     @Schema(description = "删除标志（0存在 2删除）")
     private String delFlag;
 
@@ -76,4 +78,7 @@ public class ZhwComment extends BaseEntity {
 
     public Boolean getLiked() { return liked; }
     public void setLiked(Boolean liked) { this.liked = liked; }
+
+    public Integer getCommentCount() { return commentCount; }
+    public void setCommentCount(Integer commentCount) { this.commentCount = commentCount; }
 }

@@ -463,6 +463,7 @@ const handleToAvatar = () => {
   return;
   // #endif
 
+  // eslint-disable-next-line no-unreachable
   uni.showActionSheet({
     itemList: list.map(v => v[1]),
     success: ({ tapIndex: i }) => {

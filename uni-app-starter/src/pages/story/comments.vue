@@ -116,7 +116,7 @@
 
     <!-- Input Area -->
     <view
-      class="bg-white border-t border-gray-100 flex items-center gap-3 px-4 z-20"
+      class="bg-white border-t border-gray-100 flex flex-col gap-1 px-4 z-20"
       style="position: fixed; bottom: 0; left: 0; right: 0; padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -2px 10px rgba(0,0,0,0.02);"
     >
       <view v-if="replyTarget" class="flex items-center justify-between w-full mb-2">

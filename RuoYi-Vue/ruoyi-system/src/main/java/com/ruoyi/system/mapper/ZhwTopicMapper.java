@@ -20,8 +20,11 @@ public interface ZhwTopicMapper {
     /** 关联故事到话题 */
     int insertStoryTopic(@Param("storyId") Long storyId, @Param("topicId") Long topicId);
 
-    /** 取消关联 */
+    /** 取消关联（指定话题） */
     int deleteStoryTopic(@Param("storyId") Long storyId, @Param("topicId") Long topicId);
+
+    /** 删除故事的全部话题关联（故事删除时级联清理） */
+    int deleteStoryTopicByStoryId(Long storyId);
 
     /** 查询话题广场故事列表（最热=热度排序，最新=更新时间排序） */
     List<ZhwStory> selectTopicStories(@Param("topicId") Long topicId,

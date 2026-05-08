@@ -31,7 +31,7 @@
     <select id="selectById" resultMap="ZhwUserResult">
         SELECT u.*,
             COALESCE((SELECT SUM(score) FROM zhw_user_score WHERE user_id = u.user_id), 0) AS score,
-            (SELECT COUNT(1) FROM zhw_story WHERE user_id = u.user_id AND del_flag = '0') AS story_count,
+            (SELECT COUNT(1) FROM zhw_story WHERE user_id = u.user_id AND del_flag = '0' AND status = '0') AS story_count,
             (SELECT COUNT(1) FROM zhw_branch WHERE user_id = u.user_id AND del_flag = '0') AS branch_count,
             (SELECT COUNT(1) FROM zhw_comment WHERE user_id = u.user_id AND del_flag = '0') AS comment_count,
             COALESCE((SELECT SUM(b.like_count) FROM zhw_branch b WHERE b.user_id = u.user_id AND b.del_flag = '0'), 0) AS like_count
@@ -58,7 +58,7 @@
     <select id="selectList" resultMap="ZhwUserResult">
         SELECT u.*,
             COALESCE((SELECT SUM(score) FROM zhw_user_score WHERE user_id = u.user_id), 0) AS score,
-            (SELECT COUNT(1) FROM zhw_story WHERE user_id = u.user_id AND del_flag = '0') AS story_count,
+            (SELECT COUNT(1) FROM zhw_story WHERE user_id = u.user_id AND del_flag = '0' AND status = '0') AS story_count,
             (SELECT COUNT(1) FROM zhw_branch WHERE user_id = u.user_id AND del_flag = '0') AS branch_count,
             (SELECT COUNT(1) FROM zhw_comment WHERE user_id = u.user_id AND del_flag = '0') AS comment_count,
             COALESCE((SELECT SUM(b.like_count) FROM zhw_branch b WHERE b.user_id = u.user_id AND b.del_flag = '0'), 0) AS like_count

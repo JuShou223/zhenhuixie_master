@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SensitiveWordUtils;
 import com.ruoyi.system.domain.ZhwUser;
 import com.ruoyi.system.mapper.ZhwBranchMapper;
+import com.ruoyi.system.mapper.ZhwStoryMapper;
 import com.ruoyi.system.service.IZhwNotificationService;
 import com.ruoyi.system.service.IZhwStoryService;
 import com.ruoyi.system.service.IZhwTopicService;
@@ -32,6 +33,9 @@ public class ZhwUserController extends BaseController {
     private ZhwBranchMapper branchMapper;
 
     @Autowired
+    private ZhwStoryMapper storyMapper;
+
+    @Autowired
     private IZhwStoryService storyService;
 
     @Autowired
@@ -53,7 +57,7 @@ public class ZhwUserController extends BaseController {
         userMap.put("avatar", user.getAvatar());
         userMap.put("remark", user.getRemark());
         userMap.put("score", branchMapper.sumLikesReceivedByUser(userId));
-        userMap.put("storyCount", branchMapper.countPublishedByUser(userId));
+        userMap.put("storyCount", storyMapper.countByUser(userId));
         userMap.put("branchCount", branchMapper.countReceivedContinuations(userId));
 
         Map<String, Object> result = new HashMap<>();

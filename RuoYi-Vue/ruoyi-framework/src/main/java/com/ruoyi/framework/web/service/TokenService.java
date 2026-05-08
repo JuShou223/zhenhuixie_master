@@ -41,9 +41,13 @@ public class TokenService
     @Value("${token.secret}")
     private String secret;
 
-    // 令牌有效期（默认30分钟）
+    // 管理后台令牌有效期（分钟，默认30分钟）
     @Value("${token.expireTime}")
     private int expireTime;
+
+    // 移动端令牌有效期（分钟，默认90天）
+    @Value("${token.expireTimeMobile:129600}")
+    private int expireTimeMobile;
 
     protected static final long MILLIS_SECOND = 1000;
 
@@ -125,33 +129,38 @@ public class TokenService
     }
 
     /**
-     * 验证令牌有效期，相差不足20分钟，自动刷新缓存
-     * 
-     * @param loginUser 登录信息
-     * @return 令牌
+     * 验证令牌有效期，剩余时间不足有效期的 1/3 时自动续期。
+     * 移动端（tokenExpireMinutes=expireTimeMobile）约 30 天触发一次续期；
+     * 管理后台（tokenExpireMinutes=0）保持原 20 分钟触发逻辑。
      */
     public void verifyToken(LoginUser loginUser)
     {
         long expireTime = loginUser.getExpireTime();
         long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= MILLIS_MINUTE_TWENTY)
+        int effective = effectiveExpireMinutes(loginUser);
+        long refreshThreshold = Math.max(MILLIS_MINUTE_TWENTY, (long) effective * MILLIS_MINUTE / 3);
+        if (expireTime - currentTime <= refreshThreshold)
         {
             refreshToken(loginUser);
         }
     }
 
     /**
-     * 刷新令牌有效期
-     * 
-     * @param loginUser 登录信息
+     * 刷新令牌有效期，使用 loginUser 自带的专属时长（移动端90天，管理后台30分钟）
      */
     public void refreshToken(LoginUser loginUser)
     {
+        int effective = effectiveExpireMinutes(loginUser);
         loginUser.setLoginTime(System.currentTimeMillis());
-        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
-        // 根据uuid将loginUser缓存
+        loginUser.setExpireTime(loginUser.getLoginTime() + (long) effective * MILLIS_MINUTE);
         String userKey = getTokenKey(loginUser.getToken());
-        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+        redisCache.setCacheObject(userKey, loginUser, effective, TimeUnit.MINUTES);
+    }
+
+    /** 返回该 session 实际生效的有效期（分钟） */
+    private int effectiveExpireMinutes(LoginUser loginUser)
+    {
+        return loginUser.getTokenExpireMinutes() > 0 ? loginUser.getTokenExpireMinutes() : expireTime;
     }
 
     /**

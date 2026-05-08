@@ -122,8 +122,12 @@ function doShare() {
 }
 
 onMounted(async () => {
-  const res = await getTopicDetail(topicId)
-  if (res && res.data) topic.value = res.data
+  try {
+    const res = await getTopicDetail(topicId)
+    if (res && res.data) topic.value = res.data
+  } catch {
+    uni.showToast({ title: '加载失败，请返回重试', icon: 'none' })
+  }
 })
 </script>
 

@@ -20,6 +20,7 @@
         <result property="authorAvatar"    column="author_avatar"/>
         <result property="replyToNickName" column="reply_to_nick_name"/>
         <result property="liked"           column="liked"/>
+        <result property="commentCount"    column="comment_count"/>
     </resultMap>
 
     <sql id="selectCommentVo">
@@ -38,7 +39,8 @@
     <select id="selectRootComments" resultMap="CommentResult">
         SELECT q.*,
                IF(#{currentUserId} > 0,
-                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.comment_id AND l.target_type = 2), 0) AS liked
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.comment_id AND l.target_type = 2), 0) AS liked,
+               (SELECT COUNT(1) FROM zhw_comment r WHERE r.parent_id = q.comment_id AND r.del_flag = '0') AS comment_count
         FROM (
             <include refid="selectCommentVo"/>
             AND c.story_id  = #{storyId}

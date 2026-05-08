@@ -10,6 +10,7 @@ import com.ruoyi.system.domain.ZhwUser;
 import com.ruoyi.system.mapper.ZhwUserMapper;
 import com.ruoyi.system.service.IZhwUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -19,6 +20,9 @@ import java.util.Collections;
  */
 @Component
 public class ZhwLoginService {
+
+    @Value("${token.expireTimeMobile:129600}")
+    private int expireTimeMobile;
 
     @Autowired
     private TokenService tokenService;
@@ -58,6 +62,7 @@ public class ZhwLoginService {
         loginUser.setUserId(zhwUser.getUserId());
         loginUser.setIpaddr(IpUtils.getIpAddr());
         loginUser.setLoginTime(DateUtils.getNowDate().getTime());
+        loginUser.setTokenExpireMinutes(expireTimeMobile);
 
         // 记录最后登录时间和IP
         zhwUserMapper.updateLoginInfo(zhwUser.getUserId(), IpUtils.getIpAddr());

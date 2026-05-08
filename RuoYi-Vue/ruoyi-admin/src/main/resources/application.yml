@@ -98,8 +98,10 @@ token:
   header: Authorization
   # 令牌密钥（生产环境通过环境变量 JWT_SECRET 覆盖）
   secret: ${JWT_SECRET:abcdefghijklmnopqrstuvwxyz}
-  # 令牌有效期（默认30分钟）
+  # 管理后台令牌有效期（分钟）
   expireTime: 30
+  # 移动端令牌有效期（分钟）：90天，滑动续期，超过90天未使用才要求重新登录
+  expireTimeMobile: 129600
 
 # MyBatis配置
 mybatis:

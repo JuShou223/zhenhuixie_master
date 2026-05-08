@@ -133,6 +133,10 @@
         WHERE s.story_id = #{storyId}
     </update>
 
+    <select id="countByUser" resultType="int">
+        SELECT COUNT(1) FROM zhw_story WHERE user_id = #{userId} AND del_flag = '0' AND status = '0'
+    </select>
+
     <select id="selectByUserId" resultMap="StoryResult">
         SELECT s.story_id, s.title, s.cover, s.setting_content, s.user_id,
                s.view_count, s.like_count, s.comment_count, s.branch_count,

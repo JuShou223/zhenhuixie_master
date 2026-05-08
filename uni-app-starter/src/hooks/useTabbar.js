@@ -1,9 +1,10 @@
 /*
  * @Date: 2026-05-06 12:52:01
  * @LastEditors: 徐一鸣
- * @LastEditTime: 2026-05-07 16:08:09
+ * @LastEditTime: 2026-05-08 10:22:44
  * @Description:
  */
+import bus from "@/common/bus.js";
 import { ref } from "vue";
 
 export const TABBAR_LIST = [
@@ -25,14 +26,23 @@ export const TABBAR_LIST = [
 ];
 
 export function useTabbar() {
-  const activeTabbar = ref("home");
+  const activeTabbar = ref("");
+
+  const loadTabbarChangeListener = () => {
+    bus.on("setActiveBar", (value) => {
+      activeTabbar.value = value;
+    });
+  };
 
   const handleSetTabbar = (value) => {
-    activeTabbar.value = value;
+    if (activeTabbar.value !== value) {
+      bus.emit("setActiveBar", value);
+    }
   };
 
   return {
     activeTabbar,
+    loadTabbarChangeListener,
     handleSetTabbar,
   };
 }

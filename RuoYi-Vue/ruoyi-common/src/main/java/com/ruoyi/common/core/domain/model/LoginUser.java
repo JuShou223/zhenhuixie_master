@@ -46,6 +46,12 @@ public class LoginUser implements UserDetails
     private Long expireTime;
 
     /**
+     * 该 session 的 token 有效期（分钟）。0 表示使用全局默认配置。
+     * 移动端登录时设为 token.expireTimeMobile，管理后台留 0。
+     */
+    private int tokenExpireMinutes;
+
+    /**
      * 登录IP地址
      */
     private String ipaddr;
@@ -250,6 +256,16 @@ public class LoginUser implements UserDetails
     public void setPermissions(Set<String> permissions)
     {
         this.permissions = permissions;
+    }
+
+    public int getTokenExpireMinutes()
+    {
+        return tokenExpireMinutes;
+    }
+
+    public void setTokenExpireMinutes(int tokenExpireMinutes)
+    {
+        this.tokenExpireMinutes = tokenExpireMinutes;
     }
 
     public SysUser getUser()

@@ -132,12 +132,16 @@ async function doSave() {
 }
 
 onMounted(async () => {
-  const res = await getMyProfile()
-  if (res && res.data && res.data.user) {
-    const u = res.data.user
-    form.value.nickName = u.nickName || ''
-    form.value.avatar = u.avatar || ''
-    form.value.remark = u.remark || ''
+  try {
+    const res = await getMyProfile()
+    if (res && res.data && res.data.user) {
+      const u = res.data.user
+      form.value.nickName = u.nickName || ''
+      form.value.avatar = u.avatar || ''
+      form.value.remark = u.remark || ''
+    }
+  } catch {
+    uni.showToast({ title: '加载失败，请返回重试', icon: 'none' })
   }
 })
 </script>

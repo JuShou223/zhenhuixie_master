@@ -255,8 +255,10 @@ async function doCreate() {
 }
 
 onMounted(async () => {
-  const res = await getTopicList()
-  if (res && res.data) topics.value = res.data
+  try {
+    const res = await getTopicList()
+    if (res && res.data) topics.value = res.data
+  } catch { /* 话题列表加载失败不阻断发布流程 */ }
   const pages = getCurrentPages()
   const topicIdFromQuery = Number(pages[pages.length - 1]?.options?.topicId || 0)
   if (topicIdFromQuery) selectedTopicId.value = topicIdFromQuery

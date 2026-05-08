@@ -36,7 +36,7 @@
               style="font-family: 'Outfit', -apple-system, sans-serif;">{{ profile.storyCount || 0 }}</text>
             <text class="text-sm text-muted mt-0.5 block">发布接龙</text>
           </view>
-          <view class="flex-1 active:scale-95 transition-transform duration-200" @tap="goMarks">
+          <view class="flex-1">
             <text class="block text-lg font-semibold text-ink tabular-nums"
               style="font-family: 'Outfit', -apple-system, sans-serif;">{{ profile.branchCount || 0 }}</text>
             <text class="text-sm text-muted mt-0.5 block">收到后续</text>

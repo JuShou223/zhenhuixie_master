@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.ruoyi.system.domain.ZhwStory;
 import com.ruoyi.system.domain.ZhwUserScore;
 import com.ruoyi.system.mapper.ZhwStoryMapper;
+import com.ruoyi.system.mapper.ZhwTopicMapper;
 import com.ruoyi.system.mapper.ZhwUserScoreMapper;
 import com.ruoyi.system.service.IZhwStoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class ZhwStoryServiceImpl implements IZhwStoryService {
 
     @Autowired
     private ZhwStoryMapper storyMapper;
+
+    @Autowired
+    private ZhwTopicMapper topicMapper;
 
     @Autowired
     private ZhwUserScoreMapper userScoreMapper;
@@ -76,8 +80,10 @@ public class ZhwStoryServiceImpl implements IZhwStoryService {
     }
 
     @Override
+    @Transactional
     public void adminDeleteStory(Long storyId) {
         storyMapper.deleteStoryAdmin(storyId);
+        topicMapper.deleteStoryTopicByStoryId(storyId);
     }
 
     @Override

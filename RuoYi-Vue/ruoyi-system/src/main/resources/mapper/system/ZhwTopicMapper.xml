@@ -22,7 +22,9 @@
         SELECT t.topic_id, t.title, t.banner, t.announcement,
                t.start_time, t.end_time, t.status, t.del_flag,
                t.create_by, t.create_time, t.update_by, t.update_time,
-               (SELECT COUNT(1) FROM zhw_story_topic st WHERE st.topic_id = t.topic_id) AS story_count
+               (SELECT COUNT(1) FROM zhw_story_topic st
+                JOIN zhw_story s ON s.story_id = st.story_id AND s.del_flag = '0' AND s.status = '0'
+                WHERE st.topic_id = t.topic_id) AS story_count
         FROM zhw_topic t
         WHERE t.del_flag = '0'
         ORDER BY t.create_time DESC
@@ -32,7 +34,9 @@
         SELECT t.topic_id, t.title, t.banner, t.announcement,
                t.start_time, t.end_time, t.status, t.del_flag,
                t.create_by, t.create_time, t.update_by, t.update_time,
-               (SELECT COUNT(1) FROM zhw_story_topic st WHERE st.topic_id = t.topic_id) AS story_count
+               (SELECT COUNT(1) FROM zhw_story_topic st
+                JOIN zhw_story s ON s.story_id = st.story_id AND s.del_flag = '0' AND s.status = '0'
+                WHERE st.topic_id = t.topic_id) AS story_count
         FROM zhw_topic t
         WHERE t.topic_id = #{topicId} AND t.del_flag = '0'
     </select>
@@ -68,6 +72,10 @@
 
     <delete id="deleteStoryTopic">
         DELETE FROM zhw_story_topic WHERE story_id = #{storyId} AND topic_id = #{topicId}
+    </delete>
+
+    <delete id="deleteStoryTopicByStoryId">
+        DELETE FROM zhw_story_topic WHERE story_id = #{storyId}
     </delete>
 
     <select id="selectTopicStories" resultMap="com.ruoyi.system.mapper.ZhwStoryMapper.StoryResult">

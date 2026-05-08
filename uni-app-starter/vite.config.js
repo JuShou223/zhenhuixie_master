@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import uni from "@dcloudio/vite-plugin-uni";
 import { UnifiedViteWeappTailwindcssPlugin as uvwt } from "weapp-tailwindcss/vite";
 import removeConsole from "vite-plugin-remove-console";
+import eslintPlugin from "vite-plugin-eslint";
 
 export default defineConfig({
   server: {
@@ -15,6 +16,13 @@ export default defineConfig({
   plugins: [
     uni(),
     uvwt(),
+    eslintPlugin({
+      cache: false,
+      include: ["src/**/*.vue", "src/**/*.js"],
+      exclude: ["node_modules", "dist"],
+      failOnWarning: false,
+      failOnError: true,
+    }),
     process.env.NODE_ENV === "production"
       ? removeConsole({ includes: ["debug"] })
       : null,

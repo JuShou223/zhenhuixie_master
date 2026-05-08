@@ -38,6 +38,9 @@ public interface ZhwStoryMapper {
     /** 查询用户发布的故事列表 */
     List<ZhwStory> selectByUserId(@Param("userId") Long userId, @Param("currentUserId") Long currentUserId);
 
+    /** 统计用户已发布故事数（与 selectByUserId 过滤条件保持一致） */
+    int countByUser(Long userId);
+
     /** 管理端故事列表（含禁用，支持关键词/状态筛选） */
     List<ZhwStory> selectAdminStoryList(@Param("keyword") String keyword, @Param("status") String status);
 
