@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `zhw_user` (
   `user_id`     bigint       NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `user_name`   varchar(30)  NOT NULL                COMMENT '用户名',
   `nick_name`   varchar(30)  DEFAULT ''              COMMENT '昵称',
-  `avatar`      varchar(100) DEFAULT ''              COMMENT '头像URL',
+  `avatar`      varchar(500) DEFAULT ''              COMMENT '头像URL',
   `remark`      varchar(200) DEFAULT ''              COMMENT '个人签名',
   `phone`       varchar(20)  DEFAULT ''              COMMENT '手机号',
   `gender`      char(1)      DEFAULT '0'             COMMENT '0未知 1男 2女',

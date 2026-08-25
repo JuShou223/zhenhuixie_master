@@ -28,6 +28,10 @@
         SELECT * FROM zhw_user WHERE user_name = #{userName}
     </select>
 
+    <select id="selectByPhone" resultMap="ZhwUserResult">
+        SELECT * FROM zhw_user WHERE phone = #{phone} LIMIT 1
+    </select>
+
     <select id="selectById" resultMap="ZhwUserResult">
         SELECT u.*,
             COALESCE((SELECT SUM(score) FROM zhw_user_score WHERE user_id = u.user_id), 0) AS score,

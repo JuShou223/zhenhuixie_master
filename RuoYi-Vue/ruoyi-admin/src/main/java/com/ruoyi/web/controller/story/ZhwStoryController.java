@@ -50,6 +50,21 @@ public class ZhwStoryController extends BaseController {
         return getDataTable(list);
     }
 
+    @Operation(summary = "搜索故事", description = "按标题/设定内容/作者昵称模糊匹配")
+    @Anonymous
+    @GetMapping("/search")
+    public TableDataInfo search(@RequestParam String keyword,
+                                 @RequestParam(defaultValue = "1") int pageNum,
+                                 @RequestParam(defaultValue = "10") int pageSize) {
+        if (keyword == null || keyword.isBlank()) {
+            return getDataTable(java.util.Collections.emptyList());
+        }
+        Long currentUserId = getCurrentUserIdSafely();
+        PageHelper.startPage(pageNum, pageSize);
+        List<ZhwStory> list = storyService.searchStories(keyword.trim(), currentUserId);
+        return getDataTable(list);
+    }
+
     @Operation(summary = "故事详情")
     @Anonymous
     @GetMapping("/{storyId}")

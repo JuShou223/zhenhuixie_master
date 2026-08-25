@@ -47,7 +47,19 @@
           <el-input v-model="form.banner" placeholder="Banner图片URL（可选）" />
         </el-form-item>
         <el-form-item label="公告/简介">
-          <el-input v-model="form.announcement" type="textarea" :rows="4" placeholder="话题公告或简介" maxlength="500" show-word-limit />
+          <editor v-model="form.announcement" :min-height="192" />
+        </el-form-item>
+        <el-form-item label="活动奖励">
+          <el-input v-model="form.rewardText" type="textarea" :rows="3" placeholder="每行一条，格式：标签|数值，例如：&#10;人气作品奖|¥3,000&#10;潜力新作奖|10名" maxlength="500" show-word-limit />
+        </el-form-item>
+        <el-form-item label="参与方式">
+          <el-input v-model="form.joinSteps" type="textarea" :rows="3" placeholder="每行一条步骤，会自动编号展示，例如：&#10;围绕活动主题创作原创故事&#10;发布作品并添加话题" maxlength="500" show-word-limit />
+        </el-form-item>
+        <el-form-item label="作品要求">
+          <el-input v-model="form.requirements" type="textarea" :rows="3" placeholder="每行一条，展示为项目符号列表" maxlength="500" show-word-limit />
+        </el-form-item>
+        <el-form-item label="评选说明">
+          <el-input v-model="form.judgeRule" type="textarea" :rows="2" placeholder="自由文本段落" maxlength="300" show-word-limit />
         </el-form-item>
         <el-form-item label="开始时间">
           <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始时间" value-format="yyyy-MM-dd HH:mm:ss" style="width:100%" />

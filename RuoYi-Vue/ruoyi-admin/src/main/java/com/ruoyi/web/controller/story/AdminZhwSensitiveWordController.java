@@ -1,9 +1,11 @@
 package com.ruoyi.web.controller.story;
 
 import com.github.pagehelper.PageHelper;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SensitiveWordUtils;
 import com.ruoyi.system.domain.ZhwSensitiveWord;
 import com.ruoyi.system.service.IZhwSensitiveWordService;
@@ -46,6 +48,7 @@ public class AdminZhwSensitiveWordController extends BaseController {
 
     @Operation(summary = "新增敏感词")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "敏感词管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult create(@RequestBody ZhwSensitiveWord word) {
         if (word.getWord() == null || word.getWord().isBlank()) {
@@ -58,6 +61,7 @@ public class AdminZhwSensitiveWordController extends BaseController {
 
     @Operation(summary = "编辑敏感词")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "敏感词管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult update(@RequestBody ZhwSensitiveWord word) {
         if (word.getId() == null) {
@@ -70,6 +74,7 @@ public class AdminZhwSensitiveWordController extends BaseController {
 
     @Operation(summary = "删除敏感词")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "敏感词管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{id}")
     public AjaxResult delete(@PathVariable Long id) {
         sensitiveWordService.deleteWord(id);
@@ -78,6 +83,7 @@ public class AdminZhwSensitiveWordController extends BaseController {
 
     @Operation(summary = "批量删除敏感词")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "敏感词管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/batch/{ids}")
     public AjaxResult batchDelete(@PathVariable String ids) {
         int count = 0;
@@ -90,6 +96,7 @@ public class AdminZhwSensitiveWordController extends BaseController {
 
     @Operation(summary = "从数据库刷新敏感词缓存")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "敏感词管理", businessType = BusinessType.OTHER)
     @PostMapping("/reload")
     public AjaxResult reload() {
         List<String> words = sensitiveWordService.getAllActiveWords();

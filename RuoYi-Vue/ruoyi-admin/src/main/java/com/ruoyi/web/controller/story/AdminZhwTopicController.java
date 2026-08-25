@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.story;
 
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.ZhwTopic;
 import com.ruoyi.system.service.IZhwTopicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +36,7 @@ public class AdminZhwTopicController extends BaseController {
 
     @Operation(summary = "创建话题")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "话题管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult create(@RequestBody ZhwTopic topic) {
         if (topic.getTitle() == null || topic.getTitle().isBlank()) {
@@ -46,6 +49,7 @@ public class AdminZhwTopicController extends BaseController {
 
     @Operation(summary = "更新话题")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "话题管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult update(@RequestBody ZhwTopic topic) {
         if (topic.getTopicId() == null) {
@@ -58,6 +62,7 @@ public class AdminZhwTopicController extends BaseController {
 
     @Operation(summary = "删除话题")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "话题管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{topicId}")
     public AjaxResult delete(@PathVariable Long topicId) {
         topicService.deleteTopic(topicId);
@@ -66,6 +71,7 @@ public class AdminZhwTopicController extends BaseController {
 
     @Operation(summary = "批量删除话题")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "话题管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/batch/{ids}")
     public AjaxResult batchDelete(@PathVariable String ids) {
         int count = 0;

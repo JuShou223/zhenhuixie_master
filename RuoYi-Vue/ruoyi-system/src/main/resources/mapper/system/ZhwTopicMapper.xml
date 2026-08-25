@@ -7,6 +7,10 @@
         <result property="title"        column="title"/>
         <result property="banner"       column="banner"/>
         <result property="announcement" column="announcement"/>
+        <result property="rewardText"   column="reward_text"/>
+        <result property="joinSteps"    column="join_steps"/>
+        <result property="requirements" column="requirements"/>
+        <result property="judgeRule"    column="judge_rule"/>
         <result property="startTime"    column="start_time"/>
         <result property="endTime"      column="end_time"/>
         <result property="status"       column="status"/>
@@ -20,6 +24,7 @@
 
     <select id="selectTopicList" resultMap="TopicResult">
         SELECT t.topic_id, t.title, t.banner, t.announcement,
+               t.reward_text, t.join_steps, t.requirements, t.judge_rule,
                t.start_time, t.end_time, t.status, t.del_flag,
                t.create_by, t.create_time, t.update_by, t.update_time,
                (SELECT COUNT(1) FROM zhw_story_topic st
@@ -32,6 +37,7 @@
 
     <select id="selectTopicById" parameterType="Long" resultMap="TopicResult">
         SELECT t.topic_id, t.title, t.banner, t.announcement,
+               t.reward_text, t.join_steps, t.requirements, t.judge_rule,
                t.start_time, t.end_time, t.status, t.del_flag,
                t.create_by, t.create_time, t.update_by, t.update_time,
                (SELECT COUNT(1) FROM zhw_story_topic st
@@ -42,8 +48,8 @@
     </select>
 
     <insert id="insertTopic" parameterType="ZhwTopic" useGeneratedKeys="true" keyProperty="topicId">
-        INSERT INTO zhw_topic (title, banner, announcement, start_time, end_time, status, del_flag, create_by, create_time)
-        VALUES (#{title}, #{banner}, #{announcement}, #{startTime}, #{endTime}, '0', '0', #{createBy}, NOW())
+        INSERT INTO zhw_topic (title, banner, announcement, reward_text, join_steps, requirements, judge_rule, start_time, end_time, status, del_flag, create_by, create_time)
+        VALUES (#{title}, #{banner}, #{announcement}, #{rewardText}, #{joinSteps}, #{requirements}, #{judgeRule}, #{startTime}, #{endTime}, '0', '0', #{createBy}, NOW())
     </insert>
 
     <update id="updateTopic" parameterType="ZhwTopic">
@@ -52,6 +58,10 @@
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="banner != null">banner = #{banner},</if>
             <if test="announcement != null">announcement = #{announcement},</if>
+            <if test="rewardText != null">reward_text = #{rewardText},</if>
+            <if test="joinSteps != null">join_steps = #{joinSteps},</if>
+            <if test="requirements != null">requirements = #{requirements},</if>
+            <if test="judgeRule != null">judge_rule = #{judgeRule},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="status != null">status = #{status},</if>

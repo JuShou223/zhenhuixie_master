@@ -10,6 +10,8 @@ public interface ZhwUserMapper {
 
     ZhwUser selectByUserName(String userName);
 
+    ZhwUser selectByPhone(String phone);
+
     ZhwUser selectById(Long userId);
 
     int insert(ZhwUser user);

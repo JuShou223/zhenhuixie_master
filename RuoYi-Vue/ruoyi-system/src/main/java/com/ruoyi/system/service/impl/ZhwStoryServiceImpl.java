@@ -30,6 +30,11 @@ public class ZhwStoryServiceImpl implements IZhwStoryService {
     }
 
     @Override
+    public List<ZhwStory> searchStories(String keyword, Long currentUserId) {
+        return storyMapper.searchStories(keyword, currentUserId);
+    }
+
+    @Override
     public ZhwStory getStoryDetail(Long storyId, Long currentUserId) {
         ZhwStory story = storyMapper.selectStoryById(storyId, currentUserId == null ? 0L : currentUserId);
         if (story == null) {

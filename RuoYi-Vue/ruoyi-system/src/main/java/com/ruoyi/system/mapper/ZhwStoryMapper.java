@@ -13,6 +13,10 @@ public interface ZhwStoryMapper {
                                    @Param("topicId") Long topicId,
                                    @Param("currentUserId") Long currentUserId);
 
+    /** 搜索故事（标题/设定内容/作者昵称） */
+    List<ZhwStory> searchStories(@Param("keyword") String keyword,
+                                  @Param("currentUserId") Long currentUserId);
+
     int insertStory(ZhwStory story);
 
     int updateStory(ZhwStory story);

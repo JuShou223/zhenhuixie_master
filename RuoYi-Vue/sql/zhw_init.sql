@@ -133,6 +133,10 @@ CREATE TABLE IF NOT EXISTS `zhw_topic` (
   `title`        varchar(100) NOT NULL                COMMENT '话题标题',
   `banner`       varchar(500) DEFAULT ''              COMMENT '话题封面图片',
   `announcement` text                                COMMENT '活动公告（富文本/纯文本）',
+  `reward_text`  text                                COMMENT '活动奖励，每行一条，格式：标签|数值',
+  `join_steps`   text                                COMMENT '参与方式，每行一条步骤',
+  `requirements` text                                COMMENT '作品要求，每行一条',
+  `judge_rule`   text                                COMMENT '评选说明',
   `start_time`   datetime                            COMMENT '活动开始时间',
   `end_time`     datetime                            COMMENT '活动结束时间',
   `status`       char(1)      DEFAULT '0'             COMMENT '状态（0进行中 1已结束）',
@@ -171,3 +175,19 @@ CREATE TABLE IF NOT EXISTS `zhw_user_score` (
   UNIQUE KEY `uk_user_story` (`user_id`, `story_id`),
   KEY `idx_story_id` (`story_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COMMENT='用户故事积分表';
+
+-- ------------------------------------
+-- 10. 首页活动横幅表
+-- ------------------------------------
+CREATE TABLE IF NOT EXISTS `zhw_home_banner` (
+  `banner_id`   bigint       NOT NULL AUTO_INCREMENT COMMENT '横幅ID',
+  `image`       varchar(255) NOT NULL                COMMENT '图片URL',
+  `link_url`    varchar(255) DEFAULT ''              COMMENT '点击跳转的小程序内部路径，可为空',
+  `sort_order`  int          DEFAULT 0               COMMENT '排序，越小越靠前',
+  `status`      char(1)      DEFAULT '0'             COMMENT '状态（0启用 1禁用）',
+  `create_by`   varchar(64)  DEFAULT ''              COMMENT '创建者',
+  `create_time` datetime                             COMMENT '创建时间',
+  `update_by`   varchar(64)  DEFAULT ''              COMMENT '更新者',
+  `update_time` datetime                             COMMENT '更新时间',
+  PRIMARY KEY (`banner_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COMMENT='首页活动横幅表';

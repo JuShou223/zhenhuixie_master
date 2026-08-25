@@ -78,6 +78,21 @@
         </choose>
     </select>
 
+    <select id="searchStories" resultMap="StoryResult">
+        SELECT q.*,
+               IF(#{currentUserId} IS NOT NULL AND #{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_like l WHERE l.user_id = #{currentUserId} AND l.target_id = q.story_id AND l.target_type = 0), 0) AS liked,
+               IF(#{currentUserId} IS NOT NULL AND #{currentUserId} > 0,
+                  (SELECT COUNT(1) FROM zhw_mark m WHERE m.user_id = #{currentUserId} AND m.story_id = q.story_id AND m.branch_id = 0), 0) AS marked
+        FROM (
+            <include refid="selectStoryVo"/>
+            AND (s.title LIKE CONCAT('%', #{keyword}, '%')
+                 OR s.setting_content LIKE CONCAT('%', #{keyword}, '%')
+                 OR u.nick_name LIKE CONCAT('%', #{keyword}, '%'))
+        ) q
+        ORDER BY q.heat_score DESC, q.create_time DESC
+    </select>
+
     <insert id="insertStory" parameterType="ZhwStory" useGeneratedKeys="true" keyProperty="storyId">
         INSERT INTO zhw_story (title, cover, setting_content, user_id, view_count, like_count,
             comment_count, branch_count, participant_count, heat_score, status, del_flag,

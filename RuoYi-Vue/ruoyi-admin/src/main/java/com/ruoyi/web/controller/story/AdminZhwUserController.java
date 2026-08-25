@@ -1,9 +1,11 @@
 package com.ruoyi.web.controller.story;
 
 import com.github.pagehelper.PageHelper;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.domain.ZhwUser;
@@ -56,6 +58,7 @@ public class AdminZhwUserController extends BaseController {
 
     @Operation(summary = "停用/启用用户")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/{userId}/status")
     public AjaxResult updateStatus(@PathVariable Long userId, @RequestParam String status) {
         if (!"0".equals(status) && !"1".equals(status)) return error("status参数只能为0或1");
@@ -65,6 +68,7 @@ public class AdminZhwUserController extends BaseController {
 
     @Operation(summary = "批量更新用户状态")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/batch/status")
     public AjaxResult batchUpdateStatus(@RequestBody Map<String, String> params) {
         String ids = params.get("ids");
@@ -80,6 +84,7 @@ public class AdminZhwUserController extends BaseController {
 
     @Operation(summary = "重置用户密码")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE, isSaveResponseData = false)
     @PutMapping("/{userId}/reset-pwd")
     public AjaxResult resetPwd(@PathVariable Long userId) {
         String pwd = SecurityUtils.encryptPassword(DEFAULT_PASSWORD);
@@ -89,6 +94,7 @@ public class AdminZhwUserController extends BaseController {
 
     @Operation(summary = "导出用户列表")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "用户管理", businessType = BusinessType.EXPORT, isSaveResponseData = false)
     @GetMapping("/export")
     public AjaxResult export(@RequestParam(required = false) String keyword,
                               @RequestParam(required = false) String status,

@@ -1,9 +1,11 @@
 package com.ruoyi.web.controller.story;
 
 import com.github.pagehelper.PageHelper;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.service.IZhwStoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,6 +36,7 @@ public class AdminZhwStoryController extends BaseController {
 
     @Operation(summary = "禁用故事（status=1）或恢复（status=0）")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "故事管理", businessType = BusinessType.UPDATE)
     @PutMapping("/{storyId}/status")
     public AjaxResult updateStatus(@PathVariable Long storyId, @RequestParam String status) {
         if (!"0".equals(status) && !"1".equals(status)) {
@@ -45,6 +48,7 @@ public class AdminZhwStoryController extends BaseController {
 
     @Operation(summary = "删除故事（软删除）")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "故事管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{storyId}")
     public AjaxResult delete(@PathVariable Long storyId) {
         storyService.adminDeleteStory(storyId);
@@ -53,6 +57,7 @@ public class AdminZhwStoryController extends BaseController {
 
     @Operation(summary = "批量删除故事")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "故事管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/batch/{ids}")
     public AjaxResult batchDelete(@PathVariable String ids) {
         int count = 0;
@@ -65,6 +70,7 @@ public class AdminZhwStoryController extends BaseController {
 
     @Operation(summary = "批量更新故事状态")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "故事管理", businessType = BusinessType.UPDATE)
     @PutMapping("/batch/status")
     public AjaxResult batchUpdateStatus(@RequestBody Map<String, String> params) {
         String ids = params.get("ids");

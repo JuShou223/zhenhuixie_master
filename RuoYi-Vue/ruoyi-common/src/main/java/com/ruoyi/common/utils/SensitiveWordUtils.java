@@ -22,15 +22,17 @@ public class SensitiveWordUtils {
     private static Map<Character, Map> DFA = new HashMap<>();
     private static final char END_FLAG = '\0';
 
-    /** 所有词库文件（classpath 相对路径） */
+    /**
+     * 词库文件（classpath 相对路径）
+     *
+     * <p>只加载色情/暴恐/反动三类合规相关词库。key.txt（约14,000通用词）以及
+     * 民生/贪腐/其他词库对本平台（小说创作社区）误杀率过高——"弟子""江湖"等仙侠武侠
+     * 常用写作词汇会被当成敏感词拦截，因此不加载。
+     */
     private static final String[] WORD_FILES = {
-        "/sensitive-words/key.txt",
         "/sensitive-words/色情词库.txt",
         "/sensitive-words/暴恐词库.txt",
-        "/sensitive-words/反动词库.txt",
-        "/sensitive-words/民生词库.txt",
-        "/sensitive-words/贪腐词库.txt",
-        "/sensitive-words/其他词库.txt"
+        "/sensitive-words/反动词库.txt"
     };
 
     static {

@@ -9,6 +9,9 @@ public interface IZhwStoryService {
     /** 首页列表（推荐/热门） */
     List<ZhwStory> listStories(String queryType, Long topicId, Long currentUserId);
 
+    /** 搜索故事（标题/设定内容/作者昵称） */
+    List<ZhwStory> searchStories(String keyword, Long currentUserId);
+
     /** 故事详情 */
     ZhwStory getStoryDetail(Long storyId, Long currentUserId);
 

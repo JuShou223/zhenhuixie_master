@@ -1,9 +1,11 @@
 package com.ruoyi.web.controller.story;
 
 import com.github.pagehelper.PageHelper;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.service.IZhwCommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,6 +34,7 @@ public class AdminZhwCommentController extends BaseController {
 
     @Operation(summary = "删除评论（强制软删除）")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "评论审核", businessType = BusinessType.DELETE)
     @DeleteMapping("/{commentId}")
     public AjaxResult delete(@PathVariable Long commentId) {
         commentService.adminDeleteComment(commentId);
@@ -40,6 +43,7 @@ public class AdminZhwCommentController extends BaseController {
 
     @Operation(summary = "批量删除评论")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "评论审核", businessType = BusinessType.DELETE)
     @DeleteMapping("/batch/{ids}")
     public AjaxResult batchDelete(@PathVariable String ids) {
         int count = 0;

@@ -20,6 +20,14 @@ public class ZhwTopic extends BaseEntity {
     private String banner;
     @Schema(description = "话题公告/简介")
     private String announcement;
+    @Schema(description = "活动奖励，每行一条，格式：标签|数值")
+    private String rewardText;
+    @Schema(description = "参与方式，每行一条步骤")
+    private String joinSteps;
+    @Schema(description = "作品要求，每行一条")
+    private String requirements;
+    @Schema(description = "评选说明")
+    private String judgeRule;
     @Schema(description = "开始时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
@@ -47,6 +55,18 @@ public class ZhwTopic extends BaseEntity {
 
     public String getAnnouncement() { return announcement; }
     public void setAnnouncement(String announcement) { this.announcement = announcement; }
+
+    public String getRewardText() { return rewardText; }
+    public void setRewardText(String rewardText) { this.rewardText = rewardText; }
+
+    public String getJoinSteps() { return joinSteps; }
+    public void setJoinSteps(String joinSteps) { this.joinSteps = joinSteps; }
+
+    public String getRequirements() { return requirements; }
+    public void setRequirements(String requirements) { this.requirements = requirements; }
+
+    public String getJudgeRule() { return judgeRule; }
+    public void setJudgeRule(String judgeRule) { this.judgeRule = judgeRule; }
 
     public Date getStartTime() { return startTime; }
     public void setStartTime(Date startTime) { this.startTime = startTime; }

@@ -105,3 +105,19 @@ ON DUPLICATE KEY UPDATE menu_name=VALUES(menu_name), perms=VALUES(perms), parent
 INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time)
 VALUES (2052, '密码重置', 2007, 3, '', '', 1, 0, 'F', '0', '0', 'zhw:user:resetPwd', '#', 'admin', NOW())
 ON DUPLICATE KEY UPDATE menu_name=VALUES(menu_name), perms=VALUES(perms), parent_id=VALUES(parent_id);
+
+-- 二级菜单：首页横幅管理
+INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+VALUES (2008, '首页横幅管理', 2000, 8, 'homeBanner', 'zhw/homeBanner/index', 1, 0, 'C', '0', '0', 'zhw:homeBanner:list', 'picture', 'admin', NOW(), '', NULL, '')
+ON DUPLICATE KEY UPDATE menu_name=VALUES(menu_name), path=VALUES(path), component=VALUES(component), perms=VALUES(perms), icon=VALUES(icon);
+
+-- 按钮权限（首页横幅管理）
+INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time)
+VALUES (2053, '横幅新增', 2008, 1, '', '', 1, 0, 'F', '0', '0', 'zhw:homeBanner:add', '#', 'admin', NOW())
+ON DUPLICATE KEY UPDATE menu_name=VALUES(menu_name), perms=VALUES(perms), parent_id=VALUES(parent_id);
+INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time)
+VALUES (2054, '横幅编辑', 2008, 2, '', '', 1, 0, 'F', '0', '0', 'zhw:homeBanner:edit', '#', 'admin', NOW())
+ON DUPLICATE KEY UPDATE menu_name=VALUES(menu_name), perms=VALUES(perms), parent_id=VALUES(parent_id);
+INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time)
+VALUES (2055, '横幅删除', 2008, 3, '', '', 1, 0, 'F', '0', '0', 'zhw:homeBanner:remove', '#', 'admin', NOW())
+ON DUPLICATE KEY UPDATE menu_name=VALUES(menu_name), perms=VALUES(perms), parent_id=VALUES(parent_id);

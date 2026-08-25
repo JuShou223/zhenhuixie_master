@@ -1,8 +1,10 @@
 package com.ruoyi.web.controller.story;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.ZhwStory;
 import com.ruoyi.system.service.IZhwStoryService;
 import com.ruoyi.system.service.ZhwExportService;
@@ -35,6 +37,7 @@ public class AdminZhwCollectionController extends BaseController {
 
     @Operation(summary = "标记/取消精选", description = "collected=true 标记，false 取消")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "精选收藏", businessType = BusinessType.UPDATE)
     @PutMapping("/{storyId}/collect")
     public AjaxResult collect(@PathVariable Long storyId,
                                @RequestParam(defaultValue = "true") boolean collected) {
@@ -44,6 +47,7 @@ public class AdminZhwCollectionController extends BaseController {
 
     @Operation(summary = "批量取消精选")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "精选收藏", businessType = BusinessType.UPDATE)
     @PutMapping("/batch/uncollect")
     public AjaxResult batchUncollect(@RequestBody Map<String, String> params) {
         String ids = params.get("ids");
@@ -64,6 +68,7 @@ public class AdminZhwCollectionController extends BaseController {
 
     @Operation(summary = "导出精选故事 JSON（含完整分支树）")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "精选收藏", businessType = BusinessType.EXPORT, isSaveResponseData = false)
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportCollection() throws Exception {
         List<ZhwStory> stories = storyService.listCollectedStories();
@@ -72,6 +77,7 @@ public class AdminZhwCollectionController extends BaseController {
 
     @Operation(summary = "按热度导出故事 JSON（minBranches=分支数下限，limit=最多条数）")
     @PreAuthorize("@ss.hasRole('admin')")
+    @Log(title = "精选收藏", businessType = BusinessType.EXPORT, isSaveResponseData = false)
     @GetMapping("/export/hot")
     public ResponseEntity<byte[]> exportHot(
             @RequestParam(defaultValue = "3") int minBranches,

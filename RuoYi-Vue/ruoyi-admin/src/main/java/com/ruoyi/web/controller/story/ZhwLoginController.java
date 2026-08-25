@@ -40,6 +40,20 @@ public class ZhwLoginController extends BaseController {
         }
     }
 
+    @Operation(summary = "社区用户手机号验证码登录", description = "短信网关接入前使用万能验证码；手机号不存在则自动注册")
+    @Anonymous
+    @PostMapping("/login/phone")
+    public AjaxResult loginByPhone(@RequestBody Map<String, String> body) {
+        String phone = body.get("phone");
+        String code = body.get("code");
+        try {
+            String token = loginService.loginByPhone(phone, code);
+            return AjaxResult.success("操作成功", token);
+        } catch (RuntimeException e) {
+            return error(e.getMessage());
+        }
+    }
+
     @Operation(summary = "社区用户注册")
     @Anonymous
     @PostMapping("/register")
